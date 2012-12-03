@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+//CanvasView is the place where you add dots and lines between them.
 @interface CanvasView : UIView
 
 @end

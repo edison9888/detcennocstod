@@ -7,51 +7,12 @@
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "DotsConnected/Dot.m"
-         timestampString = "375617221.872222"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "25"
-         endingLineNumber = "25"
-         landmarkName = "-initWithFrame:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "DotsConnected/Dot.m"
-         timestampString = "375617221.872222"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "21"
-         endingLineNumber = "21"
-         landmarkName = "-initWithFrame:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "DotsConnected/MainPage.m"
-         timestampString = "375606215.133682"
+         timestampString = "376233564.634944"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "98"
-         endingLineNumber = "98"
-         landmarkName = "-viewForZoomingInScrollView:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "DotsConnected/MainPage.m"
-         timestampString = "375606215.133682"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "99"
-         endingLineNumber = "99"
+         startingLineNumber = "96"
+         endingLineNumber = "96"
          landmarkName = "-viewForZoomingInScrollView:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -60,25 +21,23 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "DotsConnected/CanvasView.m"
-         timestampString = "375606771.325084"
+         timestampString = "376236715.292428"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "76"
-         endingLineNumber = "76"
-         landmarkName = "-drawRect:"
-         landmarkType = "5">
+         startingLineNumber = "189"
+         endingLineNumber = "189">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "DotsConnected/PanelView.m"
-         timestampString = "375617221.872222"
+         filePath = "DotsConnected/Dot.m"
+         timestampString = "376234157.727615"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "102"
-         endingLineNumber = "102"
-         landmarkName = "-touchesEnded:withEvent:"
+         startingLineNumber = "61"
+         endingLineNumber = "61"
+         landmarkName = "+setBGImage:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -86,38 +45,38 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "DotsConnected/Dot.m"
-         timestampString = "375617221.872222"
+         timestampString = "376234157.727615"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "66"
-         endingLineNumber = "66"
+         startingLineNumber = "90"
+         endingLineNumber = "90"
          landmarkName = "+getDot"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "DotsConnected/PanelView.m"
-         timestampString = "375617221.872222"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "122"
-         endingLineNumber = "122"
-         landmarkName = "-adjustDotPosIfNecessary:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "DotsConnected/PanelView.m"
-         timestampString = "375617221.872222"
+         filePath = "DotsConnected/Dot.m"
+         timestampString = "376234230.168858"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "127"
-         endingLineNumber = "127"
-         landmarkName = "-adjustDotPosIfNecessary:"
+         startingLineNumber = "69"
+         endingLineNumber = "69"
+         landmarkName = "+setBGImage:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "DotsConnected/Dot.m"
+         timestampString = "376234267.794941"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "99"
+         endingLineNumber = "99"
+         landmarkName = "+getDot"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

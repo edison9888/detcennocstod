@@ -8,12 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+//Dot is the abstraction of what you added onto the canvas. You can change its size, background color, and background image. And you can add subviews into it with some little modifications as well.
 @interface Dot : UIView
-
 
 + (Dot*) getDot;
 
-+ (BOOL) setDotSize:(CGSize)aSize;
-+ (CGSize) getDotSize;
++ (void) setSize:(CGSize)aSize;
++ (CGSize) getSize;
+
++(void) setBGColor: (UIColor*)aColor;
++ (UIColor*) getBGColor;
+
++ (void) setBGImage:(UIImage*)aImage;
 
 @end

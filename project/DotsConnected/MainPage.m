@@ -11,14 +11,14 @@
 
 @interface MainPage ()
 {
-    PanelView* mCanvasView;
+    PanelView* mPanel;  //the panle where we add and connect dots.
 }
-@property (nonatomic, retain) PanelView* mCanvasView;
+@property (nonatomic, retain) PanelView* mPanel;
 
 @end
 
 @implementation MainPage
-@synthesize mCanvasView;
+@synthesize mPanel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -31,7 +31,7 @@
 
 - (void) dealloc
 {
-    self.mCanvasView = nil;
+    self.mPanel = nil;
     
     [super dealloc];
 }
@@ -40,7 +40,6 @@
 {
     CGRect sFrame = [[UIScreen mainScreen] applicationFrame];
     sFrame.size = CGSizeMake(sFrame.size.width, sFrame.size.height-self.navigationController.navigationBar.bounds.size.height-self.tabBarController.tabBar.bounds.size.height);
-    
     UIView* sView = [[UIView alloc] initWithFrame:sFrame];
     self.view = sView;
     [sView release];
@@ -49,32 +48,30 @@
     CGFloat sY;
     CGFloat sWidth;
     CGFloat sHeight;
-    
     sX = 0;
     sY = 0;
-    sWidth = 1000;
-    sHeight = 800;
+    sWidth = 1000;      //width for background image.
+    sHeight = 800;      //height for background image.
     
+    //create a scroll view, and add a panel into it.
     UIScrollView* sScrollView = [[[UIScrollView alloc] initWithFrame:self.view.bounds] autorelease];
     sScrollView.bounces = NO;
     sScrollView.bouncesZoom = NO;
+    self.mPanel = [[[PanelView alloc] initWithFrame:CGRectMake(sX, sY, sWidth, sHeight) backgroundImage:[UIImage imageNamed:@"backgroundA1000x800.png"]] autorelease];
+    [self.mPanel setDotSize:CGSizeMake(20, 20)];
+    [self.mPanel setDotColor:[UIColor blueColor]];
+    [self.mPanel setDotImage:[UIImage imageNamed:@"smileB34.png"]];
     
-    PanelView* sCanvasImageView = [[[PanelView alloc] initWithFrame:CGRectMake(sX, sY, sWidth, sHeight) backgroundImage:[UIImage imageNamed:@"canvas1000x800.png"]] autorelease];
-    
-//    CanvasView* sCanvasImageView = [[[CanvasView alloc] initWithFrame:CGRectMake(sX, sY, sWidth, sHeight) backgroundImage:nil] autorelease];
-
-    self.mCanvasView = sCanvasImageView;
-    
-    [sScrollView addSubview:self.mCanvasView];
+    [sScrollView addSubview:self.mPanel];
     sScrollView.contentSize = CGSizeMake(sWidth, sHeight);
-    float sWidthRatio = sScrollView.bounds.size.width/sCanvasImageView.bounds.size.width;
-    float sHeightRatio = sScrollView.bounds.size.height/sCanvasImageView.bounds.size.height;
+    float sWidthRatio = sScrollView.bounds.size.width/self.mPanel.bounds.size.width;
+    float sHeightRatio = sScrollView.bounds.size.height/self.mPanel.bounds.size.height;
     float sMinZoomScale = (sWidthRatio<sHeightRatio)?sWidthRatio:sHeightRatio;
     [sScrollView setMinimumZoomScale:sMinZoomScale];
     [sScrollView setMaximumZoomScale:1.0];
     [sScrollView setZoomScale:sScrollView.maximumZoomScale];
-
     sScrollView.delegate = self;
+    
     [self.view addSubview: sScrollView];
 }
 
@@ -95,7 +92,7 @@
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
-    return self.mCanvasView;
+    return self.mPanel;
 }
 
 @end

@@ -8,17 +8,22 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CanvasView : UIView
-{
-    
-}
-
-
-@end
-
-
+//PanelView is composed of background image and canvas.
 @interface PanelView : UIView
 
+
+//aBGImage refers to the background image of the panel.
 - (id)initWithFrame:(CGRect)frame backgroundImage:(UIImage*)aBGImage;
+
+
+//tune the properties of dots to be added onto the panel.
+- (void) setDotSize:(CGSize)aSize;
+
+- (void) setDotColor: (UIColor*)aColor;
+
+- (void) setDotImage:(UIImage*)aImage;
+
+
+
 
 @end

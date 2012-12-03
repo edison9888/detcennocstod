@@ -9,10 +9,13 @@
 #import "Dot.h"
 
 #define DEFAULT_DOT_SIZE CGSizeMake(15, 15)
+#define DEFAULT_DOT_BACKGROUND_COLOR  ([UIColor redColor])
 #define DEFAULT_DOT_EDGE_INSETS UIEdgeInsetsZero
 
-static CGSize DotSize;
-static UIEdgeInsets DotEdgeInsets;
+static CGSize SharedDotSize;
+static UIColor* SharedBackgroundColor = nil;
+static UIImage* SharedBackgroundImage = nil;
+//static UIEdgeInsets DotEdgeInsets; //EdgeInsets is not used for now.
 
 @implementation Dot
 
@@ -20,33 +23,54 @@ static UIEdgeInsets DotEdgeInsets;
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setBackgroundColor:[UIColor blackColor]];
-        
-        UILabel* sLabel = [[UILabel alloc] initWithFrame:self.bounds];
-        sLabel.backgroundColor = [UIColor clearColor];
-        sLabel.textColor = [UIColor whiteColor];
-        sLabel.textAlignment = UITextAlignmentCenter;
-        sLabel.text = @"X";
-        sLabel.font = [UIFont systemFontOfSize:15];
-        [self addSubview:sLabel];
-        
-        [sLabel release];
-
+        //you can add subviews here.
     }
     return self;
 }
 
-+ (BOOL) setDotSize:(CGSize)aSize
++ (void) setSize:(CGSize)aSize
 {
-    DotSize = aSize;
+    SharedDotSize = aSize;
     
-    return YES;
+    return;
 }
 
-+ (CGSize) getDotSize
++ (CGSize) getSize
 {
-    return DotSize;
+    return SharedDotSize;
 }
+
+
++(void) setBGColor: (UIColor*)aColor
+{
+    if (aColor)
+    {
+        [SharedBackgroundColor release];
+        SharedBackgroundColor = aColor;
+        [SharedBackgroundColor retain];
+    }
+}
+
++ (UIColor*) getBGColor
+{
+    return SharedBackgroundColor;
+}
+
++ (void) setBGImage:(UIImage*)aImage
+{
+    if (aImage)
+    {
+        [SharedBackgroundImage release];
+        SharedBackgroundImage = aImage;
+        [SharedBackgroundImage retain];
+        
+        //set background color and dot size according to the background image.
+        [self setBGColor:[UIColor colorWithPatternImage:SharedBackgroundImage]];
+        [self setSize:CGSizeMake(SharedBackgroundImage.scale*SharedBackgroundImage.size.width, SharedBackgroundImage.scale*SharedBackgroundImage.size.height)];
+    }
+    
+}
+
 
 //+ (UIEdgeInsets) getDotEdgeInsets
 //{
@@ -63,12 +87,18 @@ static UIEdgeInsets DotEdgeInsets;
 
 + (Dot*) getDot
 {
-    if (CGSizeEqualToSize(DotSize, CGSizeZero))
+    if (CGSizeEqualToSize(SharedDotSize, CGSizeZero))
     {
-        DotSize = DEFAULT_DOT_SIZE;
+        SharedDotSize = DEFAULT_DOT_SIZE;
+    }
+    if (!SharedBackgroundColor)
+    {
+        SharedBackgroundColor = DEFAULT_DOT_BACKGROUND_COLOR;
     }
     
-    Dot* sDot = [[[Dot alloc] initWithFrame:CGRectMake(0, 0, DotSize.width, DotSize.height)] autorelease];
+    Dot* sDot = [[[Dot alloc] initWithFrame:CGRectMake(0, 0, SharedDotSize.width, SharedDotSize.height)] autorelease];
+    sDot.backgroundColor = SharedBackgroundColor;
+    
     return sDot;
 }
 
