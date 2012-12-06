@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "TouchEventResponderDelegate.h"
 
 //MainPage is the main class for this project, in which we construct a panel and perform dots addition and connection on that panel.
-@interface MainPage : UIViewController<UIScrollViewDelegate>
+@interface MainPage : UIViewController<UIScrollViewDelegate,TouchEventResponderDelegate>
 
 @end

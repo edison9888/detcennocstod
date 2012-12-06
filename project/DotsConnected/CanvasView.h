@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PanelView.h"
 
 //CanvasView is the place where you add dots and lines between them.
 @interface CanvasView : UIView
+
+- (void) refreshCanvas;
+- (id) initWithFrame:(CGRect)frame onPanelView:(PanelView*)aPanel;
 
 @end

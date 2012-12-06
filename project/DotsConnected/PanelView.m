@@ -10,25 +10,28 @@
 
 #import "Dot.h"
 #import "CanvasView.h"
+#import "TouchEventResponderDelegate.h"
+
 
 
 @interface PanelView ()
 {
     UIImageView* mBackgroundImage;
-    CanvasView* mCanvas;
-    
+//    CanvasView* mCanvas;
+ 
 }
 @property (nonatomic, retain) UIImageView* mBackgroundImage;
-@property (nonatomic, retain) CanvasView* mCanvas;
+
+//@property (nonatomic, retain) CanvasView* mCanvas;
 @end
 
 
 @implementation PanelView
 @synthesize mBackgroundImage;
-@synthesize mCanvas;
+//@synthesize mCanvas;
+@synthesize mDelegate;
 
-
-- (id)initWithFrame:(CGRect)frame backgroundImage:(UIImage*)aBGImage
+- (id)initWithFrame:(CGRect)frame backgroundImage:(UIImage*)aBGImage Delegate:(id)aDelegate;
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -45,12 +48,14 @@
         }
                 
         //canvas
-        CanvasView* sCanvas = [[CanvasView alloc] initWithFrame:frame];
+        CanvasView* sCanvas = [[CanvasView alloc] initWithFrame:frame onPanelView:self ];
         sCanvas.backgroundColor = [UIColor clearColor];
         [self addSubview:sCanvas];
-        self.mCanvas = sCanvas;
+//        self.mCanvas = sCanvas;
         
         [sCanvas release];
+        
+        self.mDelegate = aDelegate;
     }
     return self;
 }
@@ -59,27 +64,25 @@
 - (void) dealloc
 {
     self.mBackgroundImage = nil;
-    self.mCanvas = nil;
+//    self.mCanvas = nil;
     
     [super dealloc];
 }
 
 - (void) setDotSize:(CGSize)aSize
 {
-    [Dot setSize:aSize];
+    [Dot setSharedSize:aSize];
 }
 
 - (void) setDotColor: (UIColor*)aColor
 {
-    [Dot setBGColor:aColor];
+    [Dot setSharedBGColor:aColor];
 }
 
 - (void) setDotImage:(UIImage*)aImage
 {
-    [Dot setBGImage:aImage];
+    [Dot setSharedBGImage:aImage];
 }
-
-
 
 
 /*

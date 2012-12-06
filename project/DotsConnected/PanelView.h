@@ -8,12 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-//PanelView is composed of background image and canvas.
+//PanelView is composed of a background image and canvas.
 @interface PanelView : UIView
+{
+    id mDelegate;
+
+}
+@property (nonatomic, assign) id mDelegate;
 
 
 //aBGImage refers to the background image of the panel.
-- (id)initWithFrame:(CGRect)frame backgroundImage:(UIImage*)aBGImage;
+- (id)initWithFrame:(CGRect)frame backgroundImage:(UIImage*)aBGImage Delegate:(id)aDelegate;
 
 
 //tune the properties of dots to be added onto the panel.
@@ -22,8 +27,6 @@
 - (void) setDotColor: (UIColor*)aColor;
 
 - (void) setDotImage:(UIImage*)aImage;
-
-
 
 
 @end

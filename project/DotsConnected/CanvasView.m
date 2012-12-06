@@ -8,40 +8,64 @@
 
 #import "CanvasView.h"
 #import "Dot.h"
+#import "Line.h"
+#import "TouchEventResponderDelegate.h"
+
+#define DISTNACE_THRESHOLD  10
 
 @interface CanvasView ()
 {
     NSMutableArray* mDots;
+    NSMutableArray* mLines;
+    PanelView*  mPanel;
     
 }
 @property (nonatomic, retain) NSMutableArray* mDots;
-
+@property (nonatomic, retain) NSMutableArray* mLines;
+@property (nonatomic, assign) PanelView* mPanel;
 
 @end
 
-
-
 @implementation CanvasView
 @synthesize mDots;
+@synthesize mLines;
+@synthesize mPanel;
+
+- (id) initWithFrame:(CGRect)frame onPanelView:(PanelView*)aPanel
+{
+    self = [super initWithFrame:frame];
+    if (self)
+    {
+        self.mPanel = aPanel;
+    }
+    return self;
+}
 
 - (void)drawRect:(CGRect)rect
 {
-    if (self.mDots.count >= 2)
+    if (self.mLines.count > 0)
     {
         CGContextRef context = UIGraphicsGetCurrentContext();
-        CGContextSetRGBStrokeColor(context, 255, 255, 255, 1.0);
-        CGContextSetLineWidth(context, 2.0);
         
-        Dot* sDot0 = (Dot*)[self.mDots objectAtIndex:0];
-        CGContextMoveToPoint (context, sDot0.center.x, sDot0.center.y);
+        Line* sFirstLine = [self.mLines objectAtIndex:0];
+        CGPoint sStartPoint = sFirstLine.mStartPoint;
+        CGContextMoveToPoint (context, sStartPoint.x, sStartPoint.y);
         
-        for (int i=1; i<self.mDots.count; i++)
+        for (int i=0; i<self.mLines.count; i++)
         {
-            Dot* sDot = (Dot*)[self.mDots objectAtIndex:i];
-            CGContextAddLineToPoint (context, sDot.center.x, sDot.center.y);
+            Line* sLine = (Line*)[self.mLines objectAtIndex:i];
+            CGPoint sStartPoint = sLine.mStartPoint;
+            CGPoint sEndPoint = sLine.mEndPoint;
+            
+            CGContextBeginPath(context);
+            CGContextMoveToPoint (context, sStartPoint.x, sStartPoint.y);
+            CGContextSetStrokeColorWithColor(context, sLine.mColor.CGColor);
+            CGContextSetLineWidth(context, sLine.mWidth);
+            CGContextAddLineToPoint (context, sEndPoint.x, sEndPoint.y);
+            CGContextStrokePath(context);
+
         }
         
-        CGContextStrokePath(context);
     }
     
 }
@@ -49,8 +73,80 @@
 - (void) dealloc
 {
     self.mDots = nil;
+    self.mLines = nil;
     
     [super dealloc];
+}
+
+//caculate the distance from a point to a line segment.
+//（x1,y1),(x2,y2）are two endpoints of line，(x3,y3) is a point
+- (double)CalDis:(double)x1:(double)y1:(double)x2:(double)y2:(double)x3:(double)y3
+{
+    double px = x2 - x1;
+    double py = y2 - y1;
+    double som = px * px + py * py;
+    double u = ((x3 - x1) * px + (y3 - y1) * py) / som;
+    if (u > 1) {
+        u = 1;
+    }
+    if (u < 0) {
+        u = 0;
+    }
+    //the closest point
+    double x = x1 + u * px;
+    double y = y1 + u * py;
+    double dx = x - x3;
+    double dy = y - y3;
+    double dist = sqrt(dx*dx + dy*dy);
+    
+    return dist;
+}
+
+
+- (CGFloat) computeDistancePoint:(CGPoint)aPoint toLine:(Line*)aLine
+{
+    return [self CalDis:aLine.mStartPoint.x :aLine.mStartPoint.y :aLine.mEndPoint.x:aLine.mEndPoint.y :aPoint.x :aPoint.y];
+}
+
+- (NSInteger) getIndexOfValidClosestLineToPoint:(CGPoint)aPoint
+{
+    CGFloat sMinDistance = CGFLOAT_MAX;
+    CGFloat sIndexOfLineSelected = -1;
+    for (int i=0; i<self.mLines.count; i++)
+    {
+        Line* sLine = [self.mLines objectAtIndex:i];
+        CGFloat sDistance = [self computeDistancePoint:aPoint toLine:sLine];
+        sDistance = sDistance-sLine.mWidth/2;
+        if (sDistance < sMinDistance)
+        {
+            sMinDistance = sDistance;
+            sIndexOfLineSelected = i;
+        }
+    }
+    
+    if (sIndexOfLineSelected != -1)
+    {
+        if (sMinDistance < DISTNACE_THRESHOLD)
+        {
+            return sIndexOfLineSelected;
+        }
+    }
+    
+    return -1;
+}
+
+//return -1 if its dot addition action, or the index of the line touched.
+- (NSInteger) dotAdditionOrIndexOfLineTouched:(CGPoint)aPoint
+{
+    NSInteger sIndexOfClosestLine = [self getIndexOfValidClosestLineToPoint:aPoint];
+   if (sIndexOfClosestLine != -1)
+   {
+       return sIndexOfClosestLine;
+   }
+   else
+   {
+       return -1;
+   }
 }
 
 //aPos serves as the left-top point of the dot
@@ -68,16 +164,16 @@
     sDot.alpha = 0;
     
     [sDot setFrame:CGRectMake(sNewPos.x, sNewPos.y, sDot.frame.size.width, sDot.frame.size.height)];
-    [self addSubview:sDot];
+    [sDot addTarget:self action:@selector(dotTouched:) forControlEvents:UIControlEventTouchDown];
     
-    if (!self.mDots)
+    [self addDot:sDot];
+    if ([self.mDots count] >= 2)
     {
-        NSMutableArray* sDots = [[NSMutableArray alloc] initWithCapacity:100];
-        self.mDots = sDots;
-        [sDots release];
+        Dot* sLastButOneDot = [self.mDots objectAtIndex:self.mDots.count-2];
+        Dot* sLastDot = [self.mDots objectAtIndex:self.mDots.count-1];
+        [self addLineDot1:sLastButOneDot Dot2:sLastDot];
     }
     
-    [self.mDots addObject:sDot];
     
     [UIView animateWithDuration:1 animations:^{
         sDot.alpha = 1.0;
@@ -102,10 +198,21 @@
     UITouch * sTouch = [touches anyObject];
     CGPoint sTouchPoint = [sTouch locationInView:self];
     
-    BOOL sIsDotAdded = [self addDotAt:sTouchPoint];
-    if (sIsDotAdded)
+    BOOL sCanvasNeedsUpdate = NO;
+    NSInteger sDotAdditionOrIndexOfLineTouched = [self dotAdditionOrIndexOfLineTouched:sTouchPoint];
+    if (-1 == sDotAdditionOrIndexOfLineTouched)
     {
-        [self setNeedsDisplay];
+           sCanvasNeedsUpdate = [self addDotAt:sTouchPoint];
+    }
+    else
+    {
+        id<TouchEventResponderDelegate> x = self.mPanel.mDelegate;
+        [x linePressed:[self.mLines objectAtIndex:sDotAdditionOrIndexOfLineTouched]];
+    }
+    
+    if (sCanvasNeedsUpdate)
+    {
+        [self refreshCanvas];
     }
 }
 
@@ -116,14 +223,14 @@
     
     
     //1. compare with the boundary of canvas
-    CGPoint sRightBottomPoint = CGPointMake(aOldPos.x+[Dot getSize].width, aOldPos.y+[Dot getSize].height);
+    CGPoint sRightBottomPoint = CGPointMake(aOldPos.x+[Dot getSharedSize].width, aOldPos.y+[Dot getSharedSize].height);
     if (sRightBottomPoint.x > self.bounds.size.width)
     {
-        sNewPos.x = self.bounds.size.width- [Dot getSize].width;
+        sNewPos.x = self.bounds.size.width- [Dot getSharedSize].width;
     }
     if (sRightBottomPoint.y > self.bounds.size.height)
     {
-        sNewPos.y = self.bounds.size.height- [Dot getSize].height;
+        sNewPos.y = self.bounds.size.height- [Dot getSharedSize].height;
     }
     
     //2. compare with other existing dots. For now, we do not have to take the overlapping siutuations into consideration.
@@ -139,6 +246,52 @@
     
     
     return sNewPos;
+}
+
+- (void) refreshCanvas
+{
+    [self setNeedsDisplay];
+}
+
+
+- (void) addDot:(Dot*)aDot;
+{
+    [self addSubview:aDot];
+    
+    if (!self.mDots)
+    {
+        NSMutableArray* sDots = [[NSMutableArray alloc] initWithCapacity:100];
+        self.mDots = sDots;
+        [sDots release];
+    }
+    
+    [self.mDots addObject:aDot];
+
+}
+
+- (void) addLineDot1:(Dot*)aDot1 Dot2:(Dot*)aDot2
+{
+    if (!self.mLines)
+    {
+        NSMutableArray* sLines = [[NSMutableArray alloc] initWithCapacity:100];
+        self.mLines = sLines;
+        [sLines release];
+    }
+    if (aDot1
+        && aDot2)
+    {
+        Line* sLine = [[Line alloc] initWithStartPoint:aDot1.center EndPoint:aDot2.center onCanvas:self];
+                
+        [self.mLines addObject:sLine];
+        
+        [sLine release];
+    }
+}
+
+- (void) dotTouched:(id)aDot
+{
+    id<TouchEventResponderDelegate> sTouchEventResponderDelegate = self.mPanel.mDelegate;
+    [sTouchEventResponderDelegate dotPressed:aDot];
 }
 
 @end

@@ -28,20 +28,20 @@ static UIImage* SharedBackgroundImage = nil;
     return self;
 }
 
-+ (void) setSize:(CGSize)aSize
++ (void) setSharedSize:(CGSize)aSize
 {
     SharedDotSize = aSize;
     
     return;
 }
 
-+ (CGSize) getSize
++ (CGSize) getSharedSize
 {
     return SharedDotSize;
 }
 
 
-+(void) setBGColor: (UIColor*)aColor
++(void) setSharedBGColor: (UIColor*)aColor
 {
     if (aColor)
     {
@@ -51,12 +51,12 @@ static UIImage* SharedBackgroundImage = nil;
     }
 }
 
-+ (UIColor*) getBGColor
++ (UIColor*) getSharedBGColor
 {
     return SharedBackgroundColor;
 }
 
-+ (void) setBGImage:(UIImage*)aImage
++ (void) setSharedBGImage:(UIImage*)aImage
 {
     if (aImage)
     {
@@ -65,12 +65,14 @@ static UIImage* SharedBackgroundImage = nil;
         [SharedBackgroundImage retain];
         
         //set background color and dot size according to the background image.
-        [self setBGColor:[UIColor colorWithPatternImage:SharedBackgroundImage]];
-        [self setSize:CGSizeMake(SharedBackgroundImage.scale*SharedBackgroundImage.size.width, SharedBackgroundImage.scale*SharedBackgroundImage.size.height)];
+        [self setSharedBGColor:[UIColor colorWithPatternImage:SharedBackgroundImage]];
+//        [self setSize:CGSizeMake(SharedBackgroundImage.scale*SharedBackgroundImage.size.width, SharedBackgroundImage.scale*SharedBackgroundImage.size.height)];
+        
+        [self setSharedSize:CGSizeMake(SharedBackgroundImage.size.width, SharedBackgroundImage.size.height)];
+
     }
     
 }
-
 
 //+ (UIEdgeInsets) getDotEdgeInsets
 //{
@@ -100,6 +102,31 @@ static UIImage* SharedBackgroundImage = nil;
     sDot.backgroundColor = SharedBackgroundColor;
     
     return sDot;
+}
+
+- (void) setSize:(CGSize)aSize
+{
+    [self setBounds:CGRectMake(0, 0, aSize.width, aSize.height)];
+}
+
+- (CGSize) getSize
+{
+    return self.bounds.size;
+}
+
+- (void) setBGColor:(UIColor*)aColor
+{
+    self.backgroundColor = aColor;
+}
+
+-  (UIColor*) getBGColor
+{
+    return self.backgroundColor;
+}
+
+- (void) setBGImage:(UIImage*)aImage
+{
+    [self setBGColor:[UIColor colorWithPatternImage:aImage]];
 }
 
 /*
