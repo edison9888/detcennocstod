@@ -175,7 +175,7 @@
     }
     
     
-    [UIView animateWithDuration:1 animations:^{
+    [UIView animateWithDuration:0.7 animations:^{
         sDot.alpha = 1.0;
     } completion:^(BOOL finished) {
     }];
